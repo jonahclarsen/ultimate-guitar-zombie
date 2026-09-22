@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Ultimate Guitar Zombie",
+  "version": "1.0.0",
+  "description": "Keeps your screen awake while Ultimate Guitar autoscroll is running on the focused page.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxdY273V1FgFZBek3h1SQLcqsHs3jyhkvsEB91KQkdci/kDZTmrf4BoW4/fi4N2CkWXhSt+Zdba+9Q36nf9Vl1GaYJJb6aKH33dkI3zKbehaWkmDDpbxGtCOFhQEt/nDcmyUzLNRTNYACAxl5Ij7N9M6VIW1ws5yJg6ph3Oqq90/KE8pNhRlt77hcClAbvwdxy8J230Gb0dKGTV6acbY0vawQarYHMgbA1rTzjdkjmvSGEpLACmDSeI64PgDFeNK3wKbZP+Rtrj0s4+YMVE+FxZSvq9KWMJHs0HcUCBZ+xfgbl9DWCNJv536UTvz30nC5nt3kU7HhN1NWUGrqUMIWlwIDAQAB",
+  "permissions": [
+    "power",
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Ultimate Guitar Zombie",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "32": "icons/ug.png"
+    }
+  },
+  "icons": {
+    "32": "icons/ug.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.ultimate-guitar.com/*"
+      ],
+      "js": [
+        "detector.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

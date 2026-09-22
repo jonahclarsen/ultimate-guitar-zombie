@@ -1,0 +1,14 @@
+{
+  "name": "ultimate-guitar-zombie",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tests/browser.mjs",
+    "install:mac": "bash native/install.sh",
+    "test:extension": "node tests/extension.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}
