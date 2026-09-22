@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ultimate Guitar Zombie",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Keeps focused Ultimate Guitar tab pages awake, with a five-minute idle timeout unless autoscroll is running.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxdY273V1FgFZBek3h1SQLcqsHs3jyhkvsEB91KQkdci/kDZTmrf4BoW4/fi4N2CkWXhSt+Zdba+9Q36nf9Vl1GaYJJb6aKH33dkI3zKbehaWkmDDpbxGtCOFhQEt/nDcmyUzLNRTNYACAxl5Ij7N9M6VIW1ws5yJg6ph3Oqq90/KE8pNhRlt77hcClAbvwdxy8J230Gb0dKGTV6acbY0vawQarYHMgbA1rTzjdkjmvSGEpLACmDSeI64PgDFeNK3wKbZP+Rtrj0s4+YMVE+FxZSvq9KWMJHs0HcUCBZ+xfgbl9DWCNJv536UTvz30nC5nt3kU7HhN1NWUGrqUMIWlwIDAQAB",
   "permissions": [
@@ -15,11 +15,16 @@
     "default_title": "Ultimate Guitar Zombie",
     "default_popup": "popup.html",
     "default_icon": {
-      "32": "icons/ug.png"
+      "16": "icons/ug-16.png",
+      "32": "icons/ug.png",
+      "48": "icons/ug-48.png"
     }
   },
   "icons": {
-    "32": "icons/ug.png"
+    "16": "icons/ug-16.png",
+    "32": "icons/ug.png",
+    "48": "icons/ug-48.png",
+    "128": "icons/ug-128.png"
   },
   "content_scripts": [
     {

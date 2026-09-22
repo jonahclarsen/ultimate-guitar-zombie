@@ -14,7 +14,7 @@ Protection stops immediately when you switch tabs or apps, navigate away, or clo
 4. Refresh any Ultimate Guitar pages already open.
 5. On macOS, install the helper below for screensaver protection.
 
-No build step or JavaScript package installation is needed to load the extension. After pulling an update, click the extension’s **Reload** button at `chrome://extensions` and refresh the Ultimate Guitar page. The existing Mac helper does not need reinstalling for version 1.1.0.
+No build step or JavaScript package installation is needed to load the extension. After pulling an update, click the extension’s **Reload** button at `chrome://extensions` and refresh the Ultimate Guitar page. The existing Mac helper does not need reinstalling for versions 1.1.0–1.1.1.
 
 ### macOS screensaver helper
 
@@ -97,4 +97,4 @@ The scanner allowlist contains only the exact public extension identity key, whi
 
 ## Icon attribution
 
-The bundled 32×32 icon is Ultimate Guitar’s [favicon](https://tabs.ultimate-guitar.com/static/public/ug/img/product_icons/ug/favicon_v2.png), downloaded September 22, 2026. Ultimate Guitar owns its branding. This project is not affiliated with or endorsed by Ultimate Guitar.
+The bundled icons use Ultimate Guitar’s [favicon](https://tabs.ultimate-guitar.com/static/public/ug/img/product_icons/ug/favicon_v2.png) and matching [48px](https://tabs.ultimate-guitar.com/static/public/ug/img/product_icons/ug/apple-touch-icon-48x48_v3.png) and [192px](https://tabs.ultimate-guitar.com/static/public/ug/img/product_icons/ug/apple-touch-icon-192x192_v3.png) site icons, downloaded September 22, 2026. The manifest declares 16px, 32px, 48px, and 128px versions, including the 48px icon used on Chrome’s extensions page. Ultimate Guitar owns its branding. This project is not affiliated with or endorsed by Ultimate Guitar.
