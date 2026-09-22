@@ -20,11 +20,12 @@ try {
     }
     assert.equal(await worker.evaluate(() => owner !== null), expected);
   };
+  await waitFor(true); // Reading without autoscroll is protected immediately.
   await page.getByRole('button').click(); await waitFor(true);
-  await page.getByRole('button').click(); await waitFor(false);
+  await page.getByRole('button').click(); await waitFor(true); // Pause starts the idle allowance.
   await page.getByRole('button').click(); await waitFor(true);
   const other = await context.newPage(); await other.goto('about:blank'); await other.bringToFront(); await waitFor(false);
   await page.bringToFront(); await waitFor(true);
   await page.goto('https://tabs.ultimate-guitar.com/'); await waitFor(false);
-  console.log('Unpacked extension: start, pause, tab switch, refocus and navigation passed.');
+  console.log('Unpacked extension: reading, autoscroll, pause allowance, tab switch, refocus and navigation passed.');
 } finally { await context.close(); await rm(profile, { recursive: true, force: true }); }

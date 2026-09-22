@@ -12,7 +12,7 @@ function stop() {
   chrome.power.releaseKeepAwake();
   if (port) { const old = port; port = null; old.disconnect(); }
   chrome.action.setBadgeText({ text: '' });
-  chrome.action.setTitle({ title: 'Ultimate Guitar Zombie — waiting for focused autoscroll' });
+  chrome.action.setTitle({ title: 'Ultimate Guitar Zombie — waiting for tab page activity' });
 }
 function connectNative() {
   if (port || Date.now() < retryAfter) return;
