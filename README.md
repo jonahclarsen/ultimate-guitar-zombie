@@ -1,6 +1,6 @@
 # Ultimate Guitar Zombie
 
-A small, unofficial Chrome extension that keeps your screen awake while **an Ultimate Guitar tab/chord page is focused**. It uses Ultimate Guitar’s actual favicon.
+A small, unofficial Chrome extension that keeps your screen awake while **an Ultimate Guitar tab/chord page is focused**, and shows the original chords while you transpose. It uses Ultimate Guitar’s actual favicon.
 
 Without autoscroll, protection expires after **five minutes without page activity**. Scrolling (including inside a scrollable panel), moving the pointer, clicking, typing, or touching the page resets the timer and resumes expired protection. With autoscroll running, protection stays on continuously. Pausing autoscroll starts a fresh five-minute allowance.
 
@@ -14,7 +14,7 @@ Protection stops immediately when you switch tabs or apps, navigate away, or clo
 4. Refresh any Ultimate Guitar pages already open.
 5. On macOS, install the helper below for screensaver protection.
 
-No build step or JavaScript package installation is needed to load the extension. After pulling an update, click the extension’s **Reload** button at `chrome://extensions` and refresh the Ultimate Guitar page. The existing Mac helper does not need reinstalling for versions 1.1.0–1.1.1.
+No build step or JavaScript package installation is needed to load the extension. After pulling an update, click the extension’s **Reload** button at `chrome://extensions` and refresh the Ultimate Guitar page. The existing Mac helper does not need reinstalling for versions 1.1.0–1.2.0.
 
 ### macOS screensaver helper
 
@@ -55,13 +55,21 @@ Open an Ultimate Guitar `/tab/…` page and keep it focused. Autoscroll is optio
 
 The popup itself takes focus away from the page, so protection pauses while the popup is open. Return focus to the page to resume if the idle allowance has not expired; otherwise interact with the page.
 
+### Original chords while transposed
+
+When you transpose with Ultimate Guitar’s own Transpose control, each moved chord shows its original name in small, dimmed text above it, and the Key reads both keys (for example `Em → F#m`). Back at the original key, the page looks exactly as Ultimate Guitar draws it. Switching between sharps and flats, or simplifying chords, does not add labels by itself.
+
+Ultimate Guitar keeps each chord’s original name in the chord’s `data-name` attribute and rewrites only the visible text, so the extension reads the original from the page rather than recalculating it. Labels are CSS pseudo-elements, so Ultimate Guitar’s own page code is never given extra elements. The original names add a little height to chord lines without changing their horizontal alignment. See `extension/transpose.js` and `extension/transpose.css`.
+
+### Autoscroll detection
+
 Detection supports the classic Autoscroll button’s stop SVG and the newer toolbar’s Pause/Stop label. It observes actual control state rather than assuming that every click successfully starts scrolling. Ordinary scrolling renews the idle allowance; unrelated media playback and DOM mutations do not. An unknown autoscroll layout falls back to the five-minute inactivity policy; Ultimate Guitar UI changes may require updating `extension/detector.js`.
 
 ## Privacy and permissions
 
 - `power`: request and release display wakefulness.
 - `nativeMessaging`: communicate with the bundled local Mac helper.
-- A content script runs only on HTTPS Ultimate Guitar subdomains. It inspects autoscroll controls, focus, and page activity; wake requests are restricted to `/tab/…` pages.
+- A content script runs only on HTTPS Ultimate Guitar subdomains. It inspects autoscroll controls, focus, and page activity; wake requests are restricted to `/tab/…` pages. It also reads chord names on the page to label transposed chords; that never leaves the page.
 
 No analytics, remote executable code, stored browsing history, credentials, or account access. No page contents or song URLs are sent to the helper; messages contain only an active/inactive flag. Extension code makes no network requests.
 
@@ -81,7 +89,7 @@ pnpm test:browser
 python3 tests/native.py
 ```
 
-`pnpm test` covers the five-minute idle boundary, activity renewal, continuous autoscroll, pause allowance, focus gating, lifecycle cleanup, heartbeat timeout, and asynchronous race handling. Idle-policy tests use a controlled clock, with no five-minute test waits. `test:extension` loads the real unpacked extension in isolated Chromium with synthetic page markup. `test:browser` checks start/pause against a live Ultimate Guitar page in installed Chrome, then tests unrelated/disabled controls. Live tests may fail if the site changes or blocks automation. Test profiles are temporary and never use your normal Chrome profile.
+`pnpm test` covers the five-minute idle boundary, activity renewal, continuous autoscroll, pause allowance, focus gating, lifecycle cleanup, heartbeat timeout, and asynchronous race handling. Idle-policy tests use a controlled clock, with no five-minute test waits. It also covers transposition math: offsets, sharp/flat spelling, and simplified chords. `test:extension` loads the real unpacked extension in isolated Chromium with synthetic page markup, including the original-chord labels, both keys, and unchanged horizontal alignment. `test:browser` checks start/pause and transposing up and back down against a live Ultimate Guitar page in installed Chrome, then tests unrelated/disabled controls. Live tests may fail if the site changes or blocks automation; as of November 2026, Ultimate Guitar refuses headless Chrome (`ERR_INVALID_HANDLE`), so the transpose display was checked by hand in a normal Chrome window. Test profiles are temporary and never use your normal Chrome profile.
 
 The native test checks real macOS power assertions, explicit stop, disconnect, and heartbeat expiry. A full timed screensaver test is still a manual check: open a tab page and confirm protection expires after five idle minutes and resumes on scrolling. Then start autoscroll on a sufficiently long page, leave it focused beyond your configured screensaver delay, and confirm protection remains on. After stopping autoscroll, allow five idle minutes for the normal idle behavior to resume.
 

@@ -18,6 +18,16 @@ try {
   await page.waitForTimeout(300);
   assert.equal(await page.evaluate(() => UGZombieDetector.running()), false, 'live UG pause detected');
   console.log('Live Ultimate Guitar start/pause detection passed.');
+  await page.addScriptTag({ path: 'extension/transpose.js' });
+  await page.addStyleTag({ path: 'extension/transpose.css' });
+  await page.getByRole('button', { name: 'Transpose', exact: true }).click();
+  await page.getByRole('button', { name: 'Transpose Up', exact: true }).click();
+  await page.waitForFunction(() => document.querySelector('pre span[data-ugz-original]'), null, { timeout: 5000 });
+  assert.equal(await page.evaluate(() => document.querySelector('pre span[data-name]').getAttribute('data-ugz-original')), 'Em', 'live original chord shown');
+  assert.equal(await page.evaluate(() => document.querySelector('[data-ugz-key]')?.getAttribute('data-ugz-key')), 'Fm', 'live transposed key shown');
+  await page.getByRole('button', { name: 'Transpose Down', exact: true }).click();
+  await page.waitForFunction(() => !document.querySelector('[data-ugz-original], [data-ugz-key]'), null, { timeout: 5000 });
+  console.log('Live Ultimate Guitar transpose display passed.');
   // Fixtures cover false positives and already-running/replaced controls.
   await page.setContent('<div><button>Pause</button></div>');
   assert.equal(await page.evaluate(() => UGZombieDetector.running()), false);

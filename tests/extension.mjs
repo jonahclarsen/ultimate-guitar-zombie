@@ -28,4 +28,34 @@ try {
   await page.bringToFront(); await waitFor(true);
   await page.goto('https://tabs.ultimate-guitar.com/'); await waitFor(false);
   console.log('Unpacked extension: reading, autoscroll, pause allowance, tab switch, refocus and navigation passed.');
+
+  // Transposition display, using UG's markup: data-name keeps the original chord.
+  await page.route('https://tabs.ultimate-guitar.com/tab/test/sheet-chords-1', route => route.fulfill({ contentType: 'text/html', body:
+    '<div><span><span>Key</span>: </span><span id="key">Em</span></div>' +
+    '<pre style="font: 13px/18px monospace">line\n<span data-name="Em" style="display:inline-block;position:relative;padding:1px 6px">Em</span>   <span data-name="D/F#" style="display:inline-block;position:relative;padding:1px 6px">D/F#</span>\nlyrics</pre>' }));
+  await page.goto('https://tabs.ultimate-guitar.com/tab/test/sheet-chords-1');
+  const chord = page.locator('pre span').first();
+  const bass = page.locator('pre span').nth(1);
+  const attrs = () => page.evaluate(() => [...document.querySelectorAll('pre span')].map(s => s.getAttribute('data-ugz-original'))
+    .concat(document.querySelector('#key').getAttribute('data-ugz-key')));
+  const settle = () => page.waitForTimeout(200);
+  await settle();
+  assert.deepEqual(await attrs(), [null, null, null], 'untransposed page is unchanged');
+  const lineTop = await chord.evaluate(el => el.getBoundingClientRect().top);
+  const x = await chord.evaluate(el => el.getBoundingClientRect().left);
+  await page.evaluate(() => { const [a, b] = document.querySelectorAll('pre span'); a.textContent = 'F#m'; b.textContent = 'E/G#'; });
+  await settle();
+  assert.deepEqual(await attrs(), ['Em', 'D/F#', 'F#m'], 'originals and transposed key shown');
+  assert.notEqual(await chord.evaluate(el => getComputedStyle(el, '::before').content), 'none', 'original label rendered');
+  assert.notEqual(await page.locator('#key').evaluate(el => getComputedStyle(el, '::after').content), 'none', 'transposed key rendered');
+  assert.equal(await chord.evaluate(el => el.getBoundingClientRect().left), x, 'chord stays horizontally aligned');
+  assert.ok(await chord.evaluate(el => el.getBoundingClientRect().top) > lineTop, 'chord line makes room for the original');
+  await page.evaluate(() => { document.querySelector('pre span').textContent = 'Gbm'; });
+  await settle();
+  assert.equal((await attrs())[2], 'Gbm', 'key follows flats');
+  await page.evaluate(() => { const [a, b] = document.querySelectorAll('pre span'); a.textContent = 'Em'; b.textContent = 'D/Gb'; });
+  await settle();
+  assert.deepEqual(await attrs(), [null, null, null], 'returning to the original key, or respelling, removes labels');
+  assert.equal(await bass.evaluate(el => getComputedStyle(el, '::before').content), 'none');
+  console.log('Unpacked extension: transposed chords show originals and both keys.');
 } finally { await context.close(); await rm(profile, { recursive: true, force: true }); }

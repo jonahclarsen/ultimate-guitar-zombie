@@ -1,0 +1,23 @@
+/* Original chord sits above the transposed one. Margin (not padding) adds room
+   without stretching UG's chord highlight or shifting horizontal alignment. */
+pre span[data-ugz-original] {
+  display: inline-block;
+  position: relative;
+  margin-top: 0.95em !important;
+}
+pre span[data-ugz-original]::before {
+  content: attr(data-ugz-original);
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  padding-left: inherit;
+  font-size: 0.77em;
+  line-height: 1.2;
+  font-weight: 500;
+  opacity: 0.55;
+  pointer-events: none;
+  white-space: pre;
+}
+[data-ugz-key]::after {
+  content: " → " attr(data-ugz-key);
+}
