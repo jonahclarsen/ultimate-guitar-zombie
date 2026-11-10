@@ -57,7 +57,7 @@ The popup itself takes focus away from the page, so protection pauses while the 
 
 ### Original chords while transposed
 
-When you transpose with Ultimate Guitar’s own Transpose control, each moved chord shows its original name in small, dimmed text above it, and the Key reads both keys (for example `Em → F#m`). Back at the original key, the page looks exactly as Ultimate Guitar draws it. Switching between sharps and flats, or simplifying chords, does not add labels by itself.
+When you transpose with Ultimate Guitar’s own Transpose control, each moved chord shows its original name in red above it, at the same size, and the Key reads both keys (for example `Em → F#m`). Back at the original key, the page looks exactly as Ultimate Guitar draws it. Switching between sharps and flats, or simplifying chords, does not add labels by itself.
 
 Ultimate Guitar keeps each chord’s original name in the chord’s `data-name` attribute and rewrites only the visible text, so the extension reads the original from the page rather than recalculating it. Labels are CSS pseudo-elements, so Ultimate Guitar’s own page code is never given extra elements. The original names add a little height to chord lines without changing their horizontal alignment. See `extension/transpose.js` and `extension/transpose.css`.
 
